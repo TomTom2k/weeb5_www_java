@@ -22,7 +22,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(requests -> requests
             .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/api/**").permitAll()
+            .requestMatchers("/login", "/register", "/api/auth/**").permitAll()
             .anyRequest().authenticated()
         )   
         .formLogin(form -> form.loginPage("/login").permitAll())

@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
@@ -27,6 +28,14 @@ public class Job {
     private Company company;
     @ManyToMany
     private List<JobSkill> jobSkills;   
+
+    @ManyToMany
+    @JoinTable(
+        name = "job_applications",
+        joinColumns = @JoinColumn(name = "job_id"),
+        inverseJoinColumns = @JoinColumn(name = "candidate_id")
+    )
+    private List<Candidate> applicants = new ArrayList<>();
 
     public Job(String name, String description, Company company) {
         this.name = name;

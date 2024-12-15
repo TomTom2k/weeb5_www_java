@@ -37,4 +37,17 @@ public class CandidateService implements IService<Candidate> {
     public List<Candidate> findAll() {
         return candidateRepository.findAll();
     }
+
+    public Candidate getCandidateById(Long candidateId) {
+        return candidateRepository.findById(candidateId)
+            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+    }
+
+    public Candidate updateCandidate(Long candidateId, Candidate updatedCandidate) {
+        Candidate candidate = getCandidateById(candidateId);
+        candidate.setName(updatedCandidate.getName());
+        candidate.setEmail(updatedCandidate.getEmail());
+        // Update other fields as necessary
+        return candidateRepository.save(candidate);
+    }
 }
