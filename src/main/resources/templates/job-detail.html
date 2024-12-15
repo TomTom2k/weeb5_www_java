@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -15,9 +15,9 @@
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-5">
             <div class="d-flex justify-content-start align-items-center">
-                <a href="/jobs" class="btn btn-secondary">Back</a>
+                <a th:href="@{/jobs}" class="btn btn-secondary">Back</a>
                 <div class="mx-4"></div>
-                <h1 class="text-center">Front End Developer</h1>
+                <h1 class="text-center" th:text="${job.name}">Job Title</h1>
             </div>
             <div class="text-center mb-4"></div>
             <button id="applyButton" class="btn btn-primary">Apply</button>
@@ -27,59 +27,30 @@
         <div class="row mb-5">
             <div class="col-lg-6">
                 <h4>Company Information</h4>
-                <p><strong>Company Name:</strong> TechCorp</p>
-                <p><strong>About Company:</strong> TechCorp is a leading tech company specializing in web development
-                    and digital solutions. We are committed to innovation and creating solutions that make an impact.
-                </p>
-                <p><strong>Website:</strong> <a href="https://www.techcorp.com" target="_blank">www.techcorp.com</a></p>
-                <p><strong>Email:</strong> contact@techcorp.com</p>
-                <p><strong>Phone:</strong> +123 456 7890</p>
-                <p><strong>Address:</strong> 123 Tech Street, Silicon Valley, CA, USA</p>
+                <p><strong>Company Name:</strong> <span th:text="${job.company.name}">Company Name</span></p>
+                <p><strong>About Company:</strong> <span th:text="${job.company.about}">About Company</span></p>
+                <p><strong>Website:</strong> <a th:href="${job.company.website}" th:text="${job.company.website}"
+                        target="_blank">Website</a></p>
+                <p><strong>Email:</strong> <span th:text="${job.company.email}">Email</span></p>
+                <p><strong>Phone:</strong> <span th:text="${job.company.phone}">Phone</span></p>
+                <p><strong>Address:</strong> <span th:text="${job.company.address}">Address</span></p>
             </div>
 
             <!-- Job Information Section -->
             <div class="col-lg-6">
                 <h4>Job Information</h4>
-                <p><strong>Job Name:</strong> Frontend Developer</p>
-                <p><strong>Job Description:</strong> As a Frontend Developer at TechCorp, you will be responsible for
-                    building modern, responsive web applications using the latest technologies and frameworks.</p>
-                <p><strong>Skill Level:</strong> Intermediate</p>
-                <p><strong>More Info:</strong> This position requires familiarity with modern JavaScript frameworks such
-                    as React and Vue.js. You will work closely with the design and backend teams to create beautiful and
-                    functional web interfaces.</p>
+                <p><strong>Job Name:</strong> <span th:text="${job.name}">Job Name</span></p>
+                <p><strong>Job Description:</strong> <span th:text="${job.description}">Job Description</span></p>
+                <p><strong>Skill Level:</strong> <span th:text="${job.skillLevel}">Skill Level</span></p>
+                <p><strong>More Info:</strong> <span th:text="${job.moreInfo}">More Info</span></p>
 
                 <!-- Skills Section -->
                 <h5>Required Skills:</h5>
                 <div class="list-group">
-                    <div class="list-group-item">
-                        <strong>HTML</strong>
-                        <p><strong>Skill Level:</strong> Advanced</p>
-                        <p><strong>More Info:</strong> Proficient in structuring web content, semantic HTML5, and
-                            ensuring accessibility.</p>
-                    </div>
-                    <div class="list-group-item">
-                        <strong>CSS</strong>
-                        <p><strong>Skill Level:</strong> Advanced</p>
-                        <p><strong>More Info:</strong> Expertise in CSS3, responsive design, Flexbox, Grid, and
-                            animations.</p>
-                    </div>
-                    <div class="list-group-item">
-                        <strong>JavaScript</strong>
-                        <p><strong>Skill Level:</strong> Advanced</p>
-                        <p><strong>More Info:</strong> Strong knowledge of JavaScript ES6+, asynchronous programming,
-                            and DOM manipulation.</p>
-                    </div>
-                    <div class="list-group-item">
-                        <strong>React.js</strong>
-                        <p><strong>Skill Level:</strong> Intermediate</p>
-                        <p><strong>More Info:</strong> Experience working with React, Redux, component-based
-                            architecture, and state management.</p>
-                    </div>
-                    <div class="list-group-item">
-                        <strong>Responsive Design</strong>
-                        <p><strong>Skill Level:</strong> Advanced</p>
-                        <p><strong>More Info:</strong> Expertise in ensuring that websites are fully responsive and
-                            mobile-friendly using media queries.</p>
+                    <div class="list-group-item" th:each="skill : ${job.jobSkills}">
+                        <strong th:text="${skill.name}">Skill Name</strong>
+                        <p><strong>Skill Level:</strong> <span th:text="${skill.level}">Skill Level</span></p>
+                        <p><strong>More Info:</strong> <span th:text="${skill.info}">More Info</span></p>
                     </div>
                 </div>
             </div>
@@ -90,9 +61,11 @@
             <button id="applyButton" class="btn btn-primary">Apply</button>
         </div>
 
-        <div id="applicantsList" class="mt-4">
+        <div id="applicantsList" class="mt-4" th:if="${userType == 'company'}">
             <h4>Applicants</h4>
-            <ul id="applicants"></ul>
+            <ul>
+                <li th:each="applicant : ${applicants}" th:text="${applicant.name}">Applicant Name</li>
+            </ul>
         </div>
 
     </div>
@@ -118,16 +91,8 @@
                 .then(response => response.text())
                 .then(message => alert(message));
         });
+    </script>
 
-        const userType = /* get user type from session or context */;
-        if (userType === 'company') {
-            const jobId = /* get job ID from URL or context */;
-            fetch(`/job/${jobId}/applicants`)
-                .then(response => response.json())
-                .then(applicants => {
-                    const applicantsList = document.getElementById('applicants');
-                    applicants.forEach(applicant => {
-                        const listItem = document.createElement('li');
-</body >
+</body>
 
-</html >
+</html>

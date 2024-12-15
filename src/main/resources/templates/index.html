@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -22,12 +22,6 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/search">Search</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/profile">Profile</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="/login">Logout</a>
           </li>
         </ul>
@@ -45,7 +39,21 @@
 
     <!-- Job Card -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 job-list">
-      <!-- Jobs will be dynamically inserted here -->
+      <div class="col" th:each="job : ${jobs}">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title" th:text="${job.name}">Job Name</h5>
+            <p class="card-text"><strong>Company:</strong> <span th:text="${job.company.name}">Company Name</span></p>
+            <p class="card-text"><strong>Skills:</strong></p>
+            <ul class="list-unstyled ms-3">
+              <li th:each="skill : ${job.jobSkills}" th:text="${skill.name}">Skill Name</li>
+            </ul>
+          </div>
+          <div class="card-footer text-center">
+            <a th:href="@{/job-detail/{id}(id=${job.id})}" class="btn btn-primary">Xem chi tiết</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -54,6 +62,7 @@
     <p>&copy; 2024 Hiring Team. All rights reserved.</p>
   </footer>
 
+  <!-- Bootstrap JS and Popper -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
     integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
     crossorigin="anonymous"></script>
@@ -62,39 +71,6 @@
     crossorigin="anonymous"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const userType = urlParams.get('userType');
-      const companyId = urlParams.get('companyId');
-
-      fetch(`/home?userType=${userType}${companyId ? '&companyId=' + companyId : ''}`)
-        .then(response => response.json())
-        .then(jobs => {
-          const jobContainer = document.querySelector('.job-list');
-          jobContainer.innerHTML = ''; // Clear existing jobs
-          jobs.forEach(job => {
-            const jobElement = document.createElement('div');
-            jobElement.classList.add('col');
-            jobElement.innerHTML = `
-              <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                  <h5 class="card-title">${job.name}</h5>
-                  <p class="card-text"><strong>Company:</strong> ${job.company.name}</p>
-                  <p class="card-text"><strong>Skills:</strong></p>
-                  <ul class="list-unstyled ms-3">
-                    ${job.jobSkills.map(skill => `<li>${skill.name}</li>`).join('')}
-                  </ul>
-                </div>
-                <div class="card-footer text-center">
-                  <a href="/job-detail/${job.id}" class="btn btn-primary">Xem chi tiết</a>
-                </div>
-              </div>
-            `;
-            jobContainer.appendChild(jobElement);
-          });
-        });
-    });
-
     document.getElementById('createJobButton').addEventListener('click', function () {
       window.location.href = '/create-job';
     });
